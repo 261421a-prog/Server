@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClassHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0f0e17;
+  --surface: #1a1827;
+  --surface2: #252336;
+  --accent1: #ff6b6b;
+  --accent2: #ffd93d;
+  --accent3: #6bcb77;
+  --accent4: #4d96ff;
+  --text: #fffffe;
+  --muted: #a7a9be;
+  --border: rgba(255,255,255,0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+header {
+  padding: 22px 36px;
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(26,24,39,0.95);
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+header h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.7rem;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent4));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+nav { display: flex; gap: 8px; margin-left: auto; }
+nav button {
+  background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+  font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 700;
+  padding: 8px 18px; border-radius: 100px; cursor: pointer; transition: all 0.2s;
+}
+nav button:hover, nav button.active { color: var(--text); border-color: var(--accent4); background: rgba(77,150,255,0.15); }
+nav button.active { color: var(--accent4); }
+.page { display: none; padding: 36px; max-width: 1100px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* HOMEWORK */
+.hw-form {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 28px;
+  display: grid; gap: 14px;
+}
+.hw-form input, .hw-form textarea, .hw-form select {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); font-family: 'Nunito', sans-serif; font-size: 0.95rem;
+  padding: 12px 16px; width: 100%; outline: none; transition: border-color 0.2s;
+}
+.hw-form input:focus, .hw-form textarea:focus, .hw-form select:focus { border-color: var(--accent4); }
+.hw-form textarea { resize: vertical; min-height: 80px; }
+.hw-form select option { background: #1a1827; }
+.row { display: flex; gap: 12px; }
+.row > * { flex: 1; }
+label.field-label { font-size: 0.8rem; color: var(--muted); display: block; margin-bottom: 5px; }
+.btn { padding: 11px 22px; border-radius: 100px; border: none; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.93rem; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--accent4); color: #fff; }
+.btn-primary:hover { background: #3a87ff; transform: translateY(-1px); }
+.btn-danger { background: rgba(255,107,107,0.1); color: var(--accent1); border: 1px solid rgba(255,107,107,0.25); font-size: 0.82rem; padding: 7px 14px; }
+.btn-danger:hover { background: rgba(255,107,107,0.2); }
+.hw-list { display: grid; gap: 14px; }
+.hw-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 24px; display: flex; gap: 14px; align-items: flex-start;
+  transition: border-color 0.2s; animation: fadeIn 0.3s ease;
+}
+.hw-card:hover { border-color: rgba(77,150,255,0.3); }
+.hw-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.hw-card-body { flex: 1; }
+.hw-card-title { font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
+.hw-card-desc { color: var(--muted); font-size: 0.87rem; margin-bottom: 10px; line-height: 1.5; }
+.hw-card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.hw-tag { font-family: 'DM Mono', monospace; font-size: 0.74rem; padding: 3px 10px; border-radius: 100px; background: var(--surface2); color: var(--muted); }
+.hw-tag.due { color: var(--accent2); background: rgba(255,217,61,0.1); }
+.hw-tag.poster { color: var(--accent3); background: rgba(107,203,119,0.1); }
+.hw-card-actions { margin-top: 10px; }
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+.page-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 24px; }
+
+/* CHESS */
+.chess-layout { display: grid; grid-template-columns: auto 260px; gap: 28px; align-items: start; }
+#chess-board {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  border: 3px solid var(--surface2); border-radius: 10px; overflow: hidden;
+  width: min(560px, calc(100vw - 340px)); aspect-ratio: 1;
+}
+.chess-cell {
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(22px, 4.5vw, 46px); cursor: pointer;
+  transition: background 0.1s; user-select: none; position: relative;
+}
+.chess-cell.light { background: #e8d5b0; }
+.chess-cell.dark { background: #8b5e3c; }
+.chess-cell.selected { background: #f6f669 !important; }
+.chess-cell.valid-move::after {
+  content: ''; position: absolute; width: 32%; height: 32%;
+  border-radius: 50%; background: rgba(0,0,0,0.22);
+}
+.chess-cell.valid-capture { outline: 4px solid rgba(0,0,0,0.22); outline-offset: -4px; }
+.chess-side { display: flex; flex-direction: column; gap: 16px; }
+.chess-info, .chess-log { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.chess-info h3, .chess-log h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 12px; font-size: 0.95rem; }
+.turn-indicator { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-bottom: 14px; }
+.turn-dot { width: 18px; height: 18px; border-radius: 50%; transition: background 0.3s; }
+.chess-log { max-height: 220px; overflow-y: auto; }
+.log-entry { font-family: 'DM Mono', monospace; font-size: 0.77rem; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--border); }
+.status-badge { display: inline-block; padding: 6px 14px; border-radius: 100px; font-size: 0.84rem; font-weight: 700; margin-top: 10px; }
+.status-check { background: rgba(255,107,107,0.15); color: var(--accent1); }
+
+/* NAME PICKER */
+.names-layout { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
+.names-list-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.names-list-header {
+  padding: 14px 20px; background: var(--surface2);
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.name-row {
+  display: flex; align-items: center; padding: 12px 20px;
+  border-bottom: 1px solid var(--border); gap: 12px; transition: background 0.15s;
+}
+.name-row:last-child { border-bottom: none; }
+.name-row:hover { background: var(--surface2); }
+.name-row.highlighted { background: rgba(255,217,61,0.1) !important; border-left: 3px solid var(--accent2); }
+.name-row.excluded { opacity: 0.35; }
+.name-num { font-family: 'DM Mono', monospace; font-size: 0.76rem; color: var(--muted); width: 22px; flex-shrink: 0; }
+.name-text { flex: 1; font-weight: 600; font-size: 0.9rem; }
+.name-checkbox { width: 17px; height: 17px; accent-color: var(--accent4); cursor: pointer; flex-shrink: 0; }
+.picker-side { display: flex; flex-direction: column; gap: 14px; }
+.picker-card, .history-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+.picker-card h3, .history-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 14px; font-size: 0.95rem; text-align: center; }
+.picked-name {
+  font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--accent2);
+  min-height: 64px; display: flex; align-items: center; justify-content: center;
+  text-align: center; line-height: 1.2; margin-bottom: 16px; transition: all 0.3s;
+}
+@keyframes popin { 0%{opacity:0;transform:scale(0.7) translateY(12px)} 70%{transform:scale(1.05)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+.spin-anim { animation: popin 0.45s cubic-bezier(.34,1.56,.64,1); }
+.pick-note { font-size: 0.8rem; color: var(--muted); text-align: center; margin-top: 8px; }
+.picker-controls { display: flex; flex-direction: column; gap: 8px; }
+.btn-pick {
+  background: linear-gradient(135deg, var(--accent2), #ffb700); color: #1a1400;
+  font-weight: 800; font-size: 1rem; padding: 13px; border-radius: 12px;
+  border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: all 0.2s; width: 100%;
+}
+.btn-pick:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,217,61,0.3); }
+.btn-pick:active { transform: translateY(0); }
+.btn-secondary {
+  background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+  padding: 9px; border-radius: 10px; font-family: 'Nunito', sans-serif;
+  font-weight: 600; font-size: 0.86rem; cursor: pointer; transition: all 0.2s; width: 100%;
+}
+.btn-secondary:hover { color: var(--text); }
+.history-list { max-height: 200px; overflow-y: auto; }
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+.history-item:last-child { border-bottom: none; }
+.history-name { font-weight: 700; }
+.history-round { font-family: 'DM Mono', monospace; font-size: 0.74rem; color: var(--muted); }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+@media (max-width: 720px) {
+  header { flex-direction: column; align-items: flex-start; padding: 16px 20px; gap: 12px; }
+  nav { margin-left: 0; flex-wrap: wrap; }
+  .page { padding: 20px; }
+  .chess-layout, .names-layout { grid-template-columns: 1fr; }
+  #chess-board { width: min(400px, 90vw); }
+  .row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 ClassHub</h1>
+  <nav>
+    <button class="active" onclick="showPage('homework', this)">📋 Homework</button>
+    <button onclick="showPage('chess', this)">♟ Chess</button>
+    <button onclick="showPage('names', this)">🎲 Name Picker</button>
+  </nav>
+</header>
+
+<!-- HOMEWORK -->
+<div id="homework-page" class="page active">
+  <div class="page-title">📋 Homework Board</div>
+  <div class="hw-form">
+    <div class="row">
+      <input id="hw-title" type="text" placeholder="Assignment title..." />
+      <select id="hw-subject">
+        <option value="math">📐 Math</option>
+        <option value="science">🔬 Science</option>
+        <option value="english">📖 English</option>
+        <option value="history">🏛 History</option>
+        <option value="other">📎 Other</option>
+      </select>
+    </div>
+    <textarea id="hw-desc" placeholder="Description / notes (optional)..."></textarea>
+    <div class="row">
+      <div>
+        <label class="field-label">Posted by</label>
+        <select id="hw-poster">
+          <option value="">Select your name...</option>
+          <option>TAN SZE KAI</option>
+          <option>TAN YOU AN TREVAN</option>
+          <option>TAN YU CHONG JAVIER</option>
+          <option>TAN YU WEN</option>
+          <option>TIMOTHY TAN ZI HAO</option>
+          <option>YANG CHENGLIN</option>
+          <option>YAP ZI XUAN</option>
+          <option>YIN QIZE</option>
+          <option>ZHANG JINGZHE</option>
+          <option>ZHAO JUNHANG</option>
+          <option>ZHAO KEXUAN LUCAS</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Due date</label>
+        <input id="hw-due" type="date" />
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addHomework()">➕ Post Update</button>
+  </div>
+  <div id="hw-list" class="hw-list"></div>
+</div>
+
+<!-- CHESS -->
+<div id="chess-page" class="page">
+  <div class="page-title">♟ Chess</div>
+  <div class="chess-layout">
+    <div id="chess-board"></div>
+    <div class="chess-side">
+      <div class="chess-info">
+        <h3>Game Status</h3>
+        <div class="turn-indicator">
+          <div class="turn-dot" id="turn-dot"></div>
+          <span id="turn-label">White's turn</span>
+        </div>
+        <div id="chess-status"></div>
+        <button class="btn btn-primary" style="margin-top:14px;width:100%" onclick="initChess()">🔄 New Game</button>
+      </div>
+      <div class="chess-log">
+        <h3>Move Log</h3>
+        <div id="move-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAME PICKER -->
+<div id="names-page" class="page">
+  <div class="page-title">🎲 Name Picker</div>
+  <div class="names-layout">
+    <div class="names-list-wrap">
+      <div class="names-list-header">
+        <span>Class Roster — HCI</span>
+        <span id="active-count" style="color:var(--muted);font-size:0.8rem;font-family:'DM Mono',monospace"></span>
+      </div>
+      <div id="names-list"></div>
+    </div>
+    <div class="picker-side">
+      <div class="picker-card">
+        <h3>🎯 Random Pick</h3>
+        <div class="picked-name" id="picked-name">—</div>
+        <div class="picker-controls">
+          <button class="btn-pick" onclick="pickName()">🎲 Pick a Name!</button>
+          <button class="btn-secondary" onclick="resetExcluded()">↺ Reset all checkboxes</button>
+          <button class="btn-secondary" onclick="clearHistory()">🗑 Clear history</button>
+        </div>
+        <div class="pick-note" id="pick-note"></div>
+      </div>
+      <div class="history-card">
+        <h3 style="text-align:left">Pick History</h3>
+        <div class="history-list" id="pick-history">
+          <div style="color:var(--muted);font-size:0.84rem">No picks yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAV ──────────────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id + '-page').classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── HOMEWORK ─────────────────────────────────────────────────
+let homeworks = JSON.parse(localStorage.getItem('classhub_hw') || '[]');
+function saveHW() { localStorage.setItem('classhub_hw', JSON.stringify(homeworks)); }
+
+function addHomework() {
+  const title = document.getElementById('hw-title').value.trim();
+  if (!title) { document.getElementById('hw-title').focus(); return; }
+  homeworks.unshift({
+    id: Date.now(),
+    title,
+    desc:    document.getElementById('hw-desc').value.trim(),
+    subject: document.getElementById('hw-subject').value,
+    poster:  document.getElementById('hw-poster').value,
+    due:     document.getElementById('hw-due').value
+  });
+  saveHW(); renderHW();
+  ['hw-title','hw-desc','hw-due'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('hw-poster').value = '';
+}
+
+function deleteHW(id) { homeworks = homeworks.filter(h => h.id !== id); saveHW(); renderHW(); }
+
+function renderHW() {
+  const list = document.getElementById('hw-list');
+  if (!homeworks.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div>No homework posted yet.<br>Be the first to add one above!</div>';
+    return;
+  }
+  const colors = { math:'#ff6b6b', science:'#6bcb77', english:'#4d96ff', history:'#ffd93d', other:'#a7a9be' };
+  list.innerHTML = homeworks.map(h => `
+    <div class="hw-card">
+      <div class="hw-dot" style="background:${colors[h.subject]}"></div>
+      <div class="hw-card-body">
+        <div class="hw-card-title">${escHtml(h.title)}</div>
+        ${h.desc ? `<div class="hw-card-desc">${escHtml(h.desc)}</div>` : ''}
+        <div class="hw-card-meta">
+          <span class="hw-tag">${h.subject[0].toUpperCase()+h.subject.slice(1)}</span>
+          ${h.due ? `<span class="hw-tag due">📅 Due ${fmtDate(h.due)}</span>` : ''}
+          ${h.poster ? `<span class="hw-tag poster">👤 ${escHtml(h.poster)}</span>` : ''}
+        </div>
+        <div class="hw-card-actions">
+          <button class="btn btn-danger" onclick="deleteHW(${h.id})">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(d) { return new Date(d+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}); }
+renderHW();
+
+// ── CHESS ─────────────────────────────────────────────────────
+const FILES = ['a','b','c','d','e','f','g','h'];
+let board, selected, turn, moveLog, moveCount, validMoves;
+
+function initChess() {
+  board = [
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    Array(8).fill(null), Array(8).fill(null),
+    Array(8).fill(null), Array(8).fill(null),
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+  ];
+  selected = null; turn = 'w'; moveLog = []; moveCount = 1; validMoves = [];
+  document.getElementById('move-log').innerHTML = '';
+  document.getElementById('chess-status').innerHTML = '';
+  renderBoard();
+}
+
+const GLYPHS = { K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙', k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟' };
+const isW = p => p && p === p.toUpperCase();
+const isB = p => p && p === p.toLowerCase();
+const sameClr = (a,b) => (isW(a)&&isW(b))||(isB(a)&&isB(b));
+
+function getMoves(r, c, brd, safe=true) {
+  const p = brd[r][c]; if (!p) return [];
+  const moves = [], w = isW(p), pt = p.toLowerCase();
+
+  const add = (nr,nc) => {
+    if (nr<0||nr>7||nc<0||nc>7) return false;
+    if (sameClr(p, brd[nr][nc])) return false;
+    moves.push([nr,nc]); return !brd[nr][nc];
+  };
+  const slide = (dr,dc) => { for(let i=1;i<8;i++) if(!add(r+dr*i,c+dc*i)) break; };
+
+  if (pt==='p') {
+    const dir=w?-1:1, start=w?6:1;
+    if (!brd[r+dir]?.[c]) { moves.push([r+dir,c]); if(r===start&&!brd[r+dir*2]?.[c]) moves.push([r+dir*2,c]); }
+    for(const dc of[-1,1]) { const nr=r+dir,nc=c+dc; if(nr>=0&&nr<8&&nc>=0&&nc<8&&brd[nr][nc]&&!sameClr(p,brd[nr][nc])) moves.push([nr,nc]); }
+  } else if (pt==='n') {
+    for(const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) add(r+dr,c+dc);
+  } else if (pt==='b') { slide(-1,-1);slide(-1,1);slide(1,-1);slide(1,1); }
+  else if (pt==='r') { slide(-1,0);slide(1,0);slide(0,-1);slide(0,1); }
+  else if (pt==='q') { slide(-1,-1);slide(-1,1);slide(1,-1);slide(1,1);slide(-1,0);slide(1,0);slide(0,-1);slide(0,1); }
+  else if (pt==='k') { for(const [dr,dc] of [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]) add(r+dr,c+dc); }
+
+  if (!safe) return moves;
+  return moves.filter(([nr,nc]) => {
+    const nb = brd.map(row=>[...row]); nb[nr][nc]=nb[r][c]; nb[r][c]=null;
+    return !inCheck(w?'w':'b', nb);
+  });
+}
+
+function inCheck(color, brd) {
+  let kr=-1,kc=-1;
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    const p=brd[r][c];
+    if((color==='w'&&p==='K')||(color==='b'&&p==='k')) { kr=r;kc=c; }
+  }
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    const p=brd[r][c]; if(!p) continue;
+    if(color==='w'&&isB(p) && getMoves(r,c,brd,false).some(([mr,mc])=>mr===kr&&mc===kc)) return true;
+    if(color==='b'&&isW(p) && getMoves(r,c,brd,false).some(([mr,mc])=>mr===kr&&mc===kc)) return true;
+  }
+  return false;
+}
+
+function hasAnyMove(color) {
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    const p=board[r][c]; if(!p) continue;
+    if(color==='w'&&isW(p)&&getMoves(r,c,board).length) return true;
+    if(color==='b'&&isB(p)&&getMoves(r,c,board).length) return true;
+  }
+  return false;
+}
+
+function renderBoard() {
+  const el = document.getElementById('chess-board'); el.innerHTML='';
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++) {
+    const cell=document.createElement('div');
+    cell.className='chess-cell '+((r+c)%2===0?'light':'dark');
+    const p=board[r][c]; if(p) cell.textContent=GLYPHS[p];
+    if(selected&&selected[0]===r&&selected[1]===c) cell.classList.add('selected');
+    if(validMoves.some(([mr,mc])=>mr===r&&mc===c))
+      cell.classList.add(board[r][c]?'valid-capture':'valid-move');
+    cell.onclick=()=>handleClick(r,c); el.appendChild(cell);
+  }
+  const dot=document.getElementById('turn-dot');
+  dot.style.background=turn==='w'?'#fff':'#222';
+  dot.style.border=turn==='w'?'2px solid #bbb':'2px solid #888';
+  document.getElementById('turn-label').textContent=turn==='w'?"White's turn":"Black's turn";
+}
+
+function handleClick(r,c) {
+  const p=board[r][c];
+  if(selected) {
+    const [sr,sc]=selected;
+    const move=validMoves.find(([mr,mc])=>mr===r&&mc===c);
+    if(move) {
+      const from=FILES[sc]+(8-sr), to=FILES[c]+(8-r);
+      const cap=board[r][c];
+      board[r][c]=board[sr][sc]; board[sr][sc]=null;
+      if(board[r][c]==='P'&&r===0) board[r][c]='Q';
+      if(board[r][c]==='p'&&r===7) board[r][c]='q';
+      const lbl=turn==='w'?`${moveCount}. W: ${cap?'x':''}${from}→${to}`:`${moveCount}. B: ${cap?'x':''}${from}→${to}`;
+      if(turn==='b') moveCount++;
+      addLog(lbl);
+      turn=turn==='w'?'b':'w';
+      selected=null; validMoves=[];
+      renderBoard(); checkStatus(); return;
+    }
+    selected=null; validMoves=[];
+  }
+  if(p&&((turn==='w'&&isW(p))||(turn==='b'&&isB(p)))) {
+    selected=[r,c]; validMoves=getMoves(r,c,board);
+  } else { selected=null; validMoves=[]; }
+  renderBoard();
+}
+
+function checkStatus() {
+  const el=document.getElementById('chess-status');
+  const check=inCheck(turn,board), noMove=!hasAnyMove(turn);
+  if(check&&noMove) el.innerHTML=`<span class="status-badge status-check">🏁 Checkmate! ${turn==='w'?'Black':'White'} wins!</span>`;
+  else if(!check&&noMove) el.innerHTML=`<span class="status-badge" style="background:rgba(167,169,190,0.15);color:var(--muted)">🤝 Stalemate — Draw!</span>`;
+  else if(check) el.innerHTML=`<span class="status-badge status-check">⚠️ ${turn==='w'?'White':'Black'} is in Check!</span>`;
+  else el.innerHTML='';
+}
+
+function addLog(text) {
+  const log=document.getElementById('move-log');
+  const e=document.createElement('div'); e.className='log-entry'; e.textContent=text;
+  log.prepend(e);
+}
+
+initChess();
+
+// ── NAME PICKER ───────────────────────────────────────────────
+const ALL_NAMES = [
+  'TAN SZE KAI','TAN YOU AN TREVAN','TAN YU CHONG JAVIER',
+  'TAN YU WEN','TIMOTHY TAN ZI HAO','YANG CHENGLIN',
+  'YAP ZI XUAN','YIN QIZE','ZHANG JINGZHE',
+  'ZHAO JUNHANG','ZHAO KEXUAN LUCAS'
+];
+
+let excluded = new Set();
+let pickHistory = [];
+let lastPicked = null;
+
+function renderNames() {
+  const list=document.getElementById('names-list');
+  const active=ALL_NAMES.filter(n=>!excluded.has(n)).length;
+  document.getElementById('active-count').textContent=`${active} / ${ALL_NAMES.length} active`;
+  list.innerHTML=ALL_NAMES.map((name,i)=>`
+    <div class="name-row ${lastPicked===name?'highlighted':''} ${excluded.has(name)?'excluded':''}">
+      <span class="name-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="name-text">${name}</span>
+      <input type="checkbox" class="name-checkbox" ${excluded.has(name)?'':'checked'}
+        onchange="toggleExclude('${name}',this.checked)" title="Include in draw" />
+    </div>`).join('');
+}
+
+function toggleExclude(name, checked) {
+  checked ? excluded.delete(name) : excluded.add(name);
+  renderNames();
+}
+
+function pickName() {
+  const pool=ALL_NAMES.filter(n=>!excluded.has(n));
+  if(!pool.length) { document.getElementById('pick-note').textContent='No names available!'; return; }
+  const picked=pool[Math.floor(Math.random()*pool.length)];
+  lastPicked=picked;
+  const el=document.getElementById('picked-name');
+  el.textContent=picked; el.classList.remove('spin-anim'); void el.offsetWidth; el.classList.add('spin-anim');
+  document.getElementById('pick-note').textContent=`Drawn from ${pool.length} name${pool.length!==1?'s':''}`;
+  pickHistory.unshift({name:picked, round:pickHistory.length+1});
+  renderHistory(); renderNames();
+}
+
+function renderHistory() {
+  const el=document.getElementById('pick-history');
+  if(!pickHistory.length) { el.innerHTML='<div style="color:var(--muted);font-size:0.84rem">No picks yet.</div>'; return; }
+  el.innerHTML=pickHistory.map(h=>`
+    <div class="history-item">
+      <span class="history-name">${h.name}</span>
+      <span class="history-round">#${h.round}</span>
+    </div>`).join('');
+}
+
+function resetExcluded() { excluded.clear(); lastPicked=null; renderNames(); }
+function clearHistory() { pickHistory=[]; renderHistory(); lastPicked=null; renderNames(); }
+
+renderNames(); renderHistory();
+</script>
+</body>
+</html>
