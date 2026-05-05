@@ -1,0 +1,133 @@
+<title>Skill Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <ul class="menu">
+    <li><a href="#" class="active">Homepage</a></li>
+    <li><a href="about/index.html">About</a></li>
+  <button class="hamburger-btn" aria-label="Open games menu">☰</button><div class="menu-right"><button class="menu-avatar" style="background: rgb(62, 43, 171);">2</button></div></ul>
+
+  <div class="page-header">
+    <div class="eyebrow">SKILL HUB</div>
+    <h1>Test your limits.</h1>
+    <p>A collection of challenges built to sharpen your speed, accuracy, and problem-solving. Pick a challenge and see how far you can go.</p>
+  </div>
+
+  <div class="card-grid">
+
+    <a class="card" href="typing/index.html">
+      <div class="card-eyebrow">SPEED</div>
+      <div class="card-title">Typing Simulator</div>
+      <div class="card-desc">Race against the clock. Improve your WPM and accuracy through focused practice and real-time feedback.</div>
+      <div class="card-tags">
+        <span class="card-tag">speed</span>
+        <span class="card-tag">accuracy</span>
+        <span class="card-tag">ranking</span>
+      </div>
+    </a>
+
+    <a class="card" href="typerace/index.html">
+      <div class="card-eyebrow">MULTIPLAYER</div>
+      <div class="card-title">Type Race</div>
+      <div class="card-desc">Go head-to-head against others in real-time typing races. First to finish wins.</div>
+      <div class="card-tags">
+        <span class="card-tag">multiplayer</span>
+        <span class="card-tag">speed</span>
+        <span class="card-tag">racing</span>
+      </div>
+    </a>
+
+    <a class="card" href="cps/index.html">
+      <div class="card-eyebrow">SPEED</div>
+      <div class="card-title">CPS Test</div>
+      <div class="card-desc">How fast can you click? Test your clicks per second over different time intervals and track your best score.</div>
+      <div class="card-tags">
+        <span class="card-tag">clicking</span>
+        <span class="card-tag">speed</span>
+        <span class="card-tag">ranking</span>
+      </div>
+    </a>
+
+    <a class="card" href="piano/index.html">
+      <div class="card-eyebrow">RHYTHM</div>
+      <div class="card-title">Piano Tiles</div>
+      <div class="card-desc">Tap the falling tiles in time with the music. Miss one and it's over — how long can you last?</div>
+      <div class="card-tags">
+        <span class="card-tag">rhythm</span>
+        <span class="card-tag">reflex</span>
+        <span class="card-tag">music</span>
+      </div>
+    </a>
+
+    <a class="card" href="clicker/index.html">
+      <div class="card-eyebrow">IDLE</div>
+      <div class="card-title">Cookie Clicker</div>
+      <div class="card-desc">Click your way to billions. Buy upgrades, automate production, and scale your cookie empire.</div>
+      <div class="card-tags">
+        <span class="card-tag">idle</span>
+        <span class="card-tag">upgrades</span>
+        <span class="card-tag">progression</span>
+      </div>
+    </a>
+
+    <a class="card" href="slushie/index.html">
+      <div class="card-eyebrow">ARCADE</div>
+      <div class="card-title">Slushie Game</div>
+      <div class="card-desc">Mix and serve slushies as fast as you can. Keep up with the orders before the queue piles up.</div>
+      <div class="card-tags">
+        <span class="card-tag">arcade</span>
+        <span class="card-tag">reflex</span>
+        <span class="card-tag">casual</span>
+      </div>
+    </a>
+
+    <a class="card" href="ctf/index.html">
+      <div class="card-eyebrow">HACKING</div>
+      <div class="card-title">CTF Challenges</div>
+      <div class="card-desc">Find flags hidden in source code, cookies, headers, and encoded data. Logic and curiosity required.</div>
+      <div class="card-tags">
+        <span class="card-tag">ctf</span>
+        <span class="card-tag">devtools</span>
+        <span class="card-tag">crypto</span>
+        <span class="card-tag">jwt</span>
+      </div>
+    </a>
+
+    <a class="card" href="minecraft/index.html">
+      <div class="card-eyebrow">3D</div>
+      <div class="card-title">Minecraft 3D</div>
+      <div class="card-desc">A browser-based 3D block world. Mine, place, and explore — no install required.</div>
+      <div class="card-tags">
+        <span class="card-tag">3d</span>
+        <span class="card-tag">building</span>
+        <span class="card-tag">sandbox</span>
+      </div>
+    </a>
+
+    <a class="card" href="math_game/index.html">
+      <div class="card-eyebrow">COMING SOON</div>
+      <div class="card-title">Math Game</div>
+      <div class="card-desc">A fast-paced math challenge is in the works. Stay sharp.</div>
+      <div class="card-tags">
+        <span class="card-tag">math</span>
+        <span class="card-tag">soon</span>
+      </div>
+    </a>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="menu.js"></script><div class="drawer-overlay"></div><nav class="game-drawer"><div class="drawer-title">Games</div><a class="drawer-link" href="/typing/index.html">Typing Simulator</a><a class="drawer-link" href="/clicker/index.html">Cookie Clicker</a><a class="drawer-link" href="/cps/index.html">CPS Test</a><a class="drawer-link" href="/piano/index.html">PianoTiles</a><a class="drawer-link" href="/ctf/index.html">CTF Challenges</a><a class="drawer-link" href="/math_game/index.html">Math Game</a><a class="drawer-link" href="/slushie/index.html">Slushie Game</a><a class="drawer-link" href="/typerace/index.html">Type Race 🆚</a><a class="drawer-link" href="/minecraft/index.html">Minecraft 3D ⚒️</a></nav>
+
+
+<div class="menu-dropdown">
+    <div class="dd-item" data-a="profile">Profile</div>
+    <div class="dd-item" data-a="settings">Settings</div>
+    
+    <div class="dd-sep"></div>
+    <div class="dd-item" data-a="signout">Sign out</div>
+    <div class="dd-item dd-danger" data-a="delete">Delete account</div></div></body></html>
