@@ -3663,7 +3663,13 @@ async function pickName(name) {
     return;
   }
 
-  currentUserName = name;
+currentUserName = name;
+
+  // Auto-grant admin if name is in ADMIN_NAMES
+  if (ADMIN_NAMES.includes(name.toLowerCase())) {
+    await db.from('admins').upsert({ user_id: currentUser.id }, { onConflict: 'user_id' });
+  }
+
   await checkAdmin(name);
   toast('Welcome, ' + name + '!');
   goto('dashboard');
