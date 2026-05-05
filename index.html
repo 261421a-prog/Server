@@ -769,20 +769,9 @@
     </div>
   </div>
 </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    /* ══════════════════════════════════════════════════════════
-       CONFIG & ADMIN SYSTEM
-    ══════════════════════════════════════════════════════════ */
-    const SUPABASE_URL  = 'https://nkvtdrdskxgwphbhdodw.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdnRkcmRza3hnd3BoYmhkb2R3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTcyMTUsImV4cCI6MjA5MjI3MzIxNX0.C-QMpeaLQzUtMvQXNKvWd8WLPf7MjVd01Sx8hdr6a1U';
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON);
-
-    // ── ADMIN CONFIG ──────────────────────────────────────────
-    // Names here must exactly match the display name claimed in the name picker (lowercase)
-
-
+   \
     const ADMIN_NAMES = ['marshall', 'dimitris']; // add or remove names here
     let currentUser     = null;
     let currentUserName = null;
