@@ -145,16 +145,7 @@
     .f-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .f-group { display: flex; flex-direction: column; gap: 8px; }
     .f-label { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--text-muted); }
-    .f-input, .f-select, .f-textarea { background: var(--dark-3); border: 1px solid rgba(201,169,110,.12); color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 12px; letter-spacing: .06em; padding: 12px 16px; outline: none; transition: border-color .3s; width: 100%; }
-    .f-input::placeholder, .f-textarea::placeholder { color: rgba(196,185,154,.25); }
-    .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--gold); }
-    .f-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a96e' stroke-width='1.2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
-    .f-select option { background: var(--dark-3); }
-    .f-textarea { resize: vertical; min-height: 90px; line-height: 1.8; }
-    .f-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
-    .btn-gold { background: transparent; border: 1px solid var(--gold); color: var(--gold-light); font-family: 'Josefin Sans', sans-serif; font-size: 10px; letter-spacing: .3em; text-transform: uppercase; padding: 12px 32px; cursor: pointer; position: relative; overflow: hidden; transition: color .3s; }
-    .btn-gold::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 0; }
-    .btn-gold:hover::before { transform: scaleX(1); }
+    .f-input, .f-select, .f-textarea { background: var(--dark-3); border: 1px solid rgba(201,169,110,.12); color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 12px; letter-spacing: .06em; padding: 12px 16px;
     .btn-gold:hover { color: var(--dark); }
     .btn-gold span { position: relative; z-index: 1; }
     .filter-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; animation: fadeUp .8s .15s ease both; }
@@ -851,10 +842,7 @@
   <script>
     /* ══════════════════════════════════════════════════════════
        CONFIG & ADMIN SYSTEM
-    ══════════════════════════════════════════════════════════ */
-    const SUPABASE_URL  = 'https://nkvtdrdskxgwphbhdodw.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdnRkcmRza3hnd3BoYmhkb2R3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTcyMTUsImV4cCI6MjA5MjI3MzIxNX0.C-QMpeaLQzUtMvQXNKvWd8WLPf7MjVd01Sx8hdr6a1U';
-    const { createClient } = supabase;
+    ═══════════════════════════════════════════════════
     const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
     let currentUser     = null;
@@ -908,18 +896,6 @@
     /* ── ROUTER ── */
     const PAGES = ['login','namepicker','dashboard','notes','homework','events','games','chameleon','admin','owner','chessmulti'];
 
-    function goto(id) {
-      if (id === 'admin' && !isAdmin) { toast('Access denied.'); return; }
-      if (id !== 'games') activeGame = null;
-      if (id === 'owner' && !isOwner) { toast('Access denied.'); return; }
-      if (id === 'owner') initOwnerPanel();
-      PAGES.forEach(p => document.getElementById('page-' + p).classList.toggle('active', p === id));
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      window.scrollTo(0, 0);
-      if (id === 'dashboard') refreshDashboardStats();
-      if (id === 'notes')     renderFiles();
-      if (id === 'homework')  renderHW();
-      if (id === 'events')    renderEvents();
       if (id === 'chameleon') initChameleon();
       if (id === 'admin')     initAdminPanel();
       if (id !== 'chameleon') stopChameleonPolling();
